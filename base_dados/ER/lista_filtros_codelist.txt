@@ -1,0 +1,4 @@
+CL_ER_TYPE_OF_TRANSFORMATION: 
+CL_ER_COUNTRY_PUB: Error accessing description - __str__ returned non-string (type NoneType)
+CL_ER_INDICATOR_PUB: 
+CL_FREQ: This code list provides a set of values indicating the "frequency" of the data (e.g. weekly, monthly, quarterly). The concept “frequency” may refer to various stages in the production process, e.g. data collection or data dissemination. For example, a time series could be disseminated at annual frequency but the underlying data are compiled monthly. The code list is applicable for all different uses of "frequency". This code list was formally adopted on 4 December 2013. More information about and supporting material for this code list and SDMX code lists in general (e.g. list of generic codes for expressing general concepts like "Total", "Unknown", etc.; syntaxes for the creation of further codes; general guidelines for the creation of SDMX code lists) can be found at this address: https://sdmx.org/?page_id=4345.
