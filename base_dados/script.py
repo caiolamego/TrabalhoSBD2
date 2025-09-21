@@ -50,7 +50,10 @@ if base in dataflows.dataflow.keys():
 
                         with open(f"{pasta}/lista_filtros_codelist.txt", "w", encoding="utf-8") as f:
                             for chave,valor in lista_filtros_codelist.items():
-                                f.write(f"{chave}: {valor}\n")            
+                                try:
+                                    f.write(f"{chave}: {valor.description}\n")
+                                except Exception as e:
+                                    f.write(f"{chave}: Error accessing description - {str(e)}\n")
 
         else:    
             data = str(getattr(estrutura,item).components)
