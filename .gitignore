@@ -1,0 +1,50 @@
+# Arquivo de gitignore para o projeto
+
+# Airflow
+airflow/logs/*
+!airflow/logs/.gitkeep
+airflow/__pycache__/
+*.pyc
+*.pyo
+
+# Environment
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*_executed_*.ipynb
+
+# Results
+Resultados/*_executed_*.ipynb
+
+# Docker
+.docker/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
