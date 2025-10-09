@@ -1,50 +1,112 @@
-x-airflow-common:
-  &airflow-common
-  image: apache/airflow:2.7.3-python3.11
-  environment:
-    &airflow-common-env
+# ==============================================
+# Base configuration for Airflow services
+# ==============================================
+x-airflow-common: &airflow-common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  user: "${AIRFLOW_UID:-50000}:0"
+  env_file:
+    - .env
+  environment: &airflow-common-env
+    # Core Configuration
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__TEST_CONNECTION: Enabled
+    AIRFLOW__CORE__DEFAULT_TIMEZONE: ${AIRFLOW__CORE__DEFAULT_TIMEZONE}
+    AIRFLOW__CORE__ENABLE_XCOM_PICKLING: 'true'
+    AIRFLOW__CORE__PLUGINS_FOLDER: ${AIRFLOW_HOME}/plugins
+    AIRFLOW__CORE__DAGS_FOLDER: ${AIRFLOW_HOME}/dags
+    
+    # Database Configuration
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DB}
+    
+    # API Configuration
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
+    
+    # WebServer Configuration
+    AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE: ${AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE}
+    AIRFLOW__WEBSERVER__INSTANCE_NAME: "${PROJECT_NAME} - Local Dev"
+    AIRFLOW__WEBSERVER__NAVBAR_COLOR: '#1f77b4'
+    AIRFLOW__WEBSERVER__RELOAD_ON_PLUGIN_CHANGE: 'true'
+    AIRFLOW__WEBSERVER__SECRET_KEY: 'your-secret-key-here'
+    
+    # Scheduler Configuration
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
-    _PIP_ADDITIONAL_REQUIREMENTS: 'sdmx1==2.22.0 pandas==2.3.2 papermill ipykernel jupyter'
+    
+    # Email Configuration
+    AIRFLOW__EMAIL__DEFAULT_EMAIL_ON_RETRY: 'false'
+    AIRFLOW__EMAIL__DEFAULT_EMAIL_ON_FAILURE: 'false'
+    
+    # Python Path
+    PYTHONPATH: "/opt/airflow/spark_config:/opt/airflow/base_dados:/opt/airflow/dags:/opt/airflow/plugins:$PYTHONPATH"
+    
+    # Spark Configuration
+    SPARK_HOME: ${SPARK_HOME}
+    PYSPARK_PYTHON: ${PYSPARK_PYTHON}
+    PYSPARK_DRIVER_PYTHON: ${PYSPARK_DRIVER_PYTHON}
+    
+    # Init Configuration
+    _AIRFLOW_DB_MIGRATE: 'true'
+    _AIRFLOW_WWW_USER_CREATE: 'true'
+    _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME}
+    _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD}
+    
+    # Additional Requirements
+    _PIP_ADDITIONAL_REQUIREMENTS: ''
+    
   volumes:
-    - ${AIRFLOW_PROJ_DIR:-.}/airflow/dags:/opt/airflow/dags
-    - ${AIRFLOW_PROJ_DIR:-.}/airflow/logs:/opt/airflow/logs
-    - ${AIRFLOW_PROJ_DIR:-.}/airflow/config:/opt/airflow/config
-    - ${AIRFLOW_PROJ_DIR:-.}/airflow/plugins:/opt/airflow/plugins
-    - ${AIRFLOW_PROJ_DIR:-.}/base_dados:/opt/airflow/base_dados
-    - ${AIRFLOW_PROJ_DIR:-.}/Resultados:/opt/airflow/Resultados
-  user: "${AIRFLOW_UID:-50000}:0"
-  depends_on:
-    &airflow-common-depends-on
+    - ${AIRFLOW_PROJ_DIR:-.}/airflow/dags:${AIRFLOW_HOME}/dags
+    - ${AIRFLOW_PROJ_DIR:-.}/airflow/logs:${AIRFLOW_HOME}/logs
+    - ${AIRFLOW_PROJ_DIR:-.}/airflow/config:${AIRFLOW_HOME}/config
+    - ${AIRFLOW_PROJ_DIR:-.}/airflow/plugins:${AIRFLOW_HOME}/plugins
+    - ${AIRFLOW_PROJ_DIR:-.}/base_dados:${AIRFLOW_HOME}/base_dados
+    - ${AIRFLOW_PROJ_DIR:-.}/Resultados:${AIRFLOW_HOME}/Resultados
+    - ${AIRFLOW_PROJ_DIR:-.}/spark_config:${AIRFLOW_HOME}/spark_config
+    - ${AIRFLOW_PROJ_DIR:-.}/notebooks:${AIRFLOW_HOME}/notebooks
+  depends_on: &airflow-common-depends-on
     postgres:
       condition: service_healthy
 
+# ==============================================
+# SERVICES
+# ==============================================
 services:
+  # ==============================================
+  # DATABASE SERVICE
+  # ==============================================
   postgres:
-    image: postgres:13
+    image: postgres:15-alpine
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
-      POSTGRES_DB: airflow
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "airflow"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
+      timeout: 5s
       retries: 5
       start_period: 5s
     restart: always
+    networks:
+      - airflow-network
 
+  # ==============================================
+  # AIRFLOW WEBSERVER
+  # ==============================================
   airflow-webserver:
     <<: *airflow-common
     command: webserver
     ports:
-      - "8080:8080"
+      - "8081:8080"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
@@ -52,11 +114,16 @@ services:
       retries: 5
       start_period: 30s
     restart: always
+    networks:
+      - airflow-network
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
 
+  # ==============================================
+  # AIRFLOW SCHEDULER
+  # ==============================================
   airflow-scheduler:
     <<: *airflow-common
     command: scheduler
@@ -67,32 +134,41 @@ services:
       retries: 5
       start_period: 30s
     restart: always
+    networks:
+      - airflow-network
     depends_on:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
 
+  # ==============================================
+  # AIRFLOW INIT
+  # ==============================================
   airflow-init:
     <<: *airflow-common
     entrypoint: /bin/bash
     command:
       - -c
       - |
-        mkdir -p /sources/logs /sources/dags /sources/plugins
-        chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
+        mkdir -p /sources/logs /sources/dags /sources/plugins /sources/config
+        chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins,config}
         exec /entrypoint airflow version
     environment:
       <<: *airflow-common-env
-      # Avoid installing additional requirements during init using root user
       _PIP_ADDITIONAL_REQUIREMENTS: ''
       _AIRFLOW_DB_MIGRATE: 'true'
       _AIRFLOW_WWW_USER_CREATE: 'true'
-      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
-      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME}
+      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD}
     user: "0:0"
+    networks:
+      - airflow-network
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/airflow:/sources
 
+  # ==============================================
+  # AIRFLOW CLI (DEBUG PROFILE)
+  # ==============================================
   airflow-cli:
     <<: *airflow-common
     profiles:
@@ -104,6 +180,21 @@ services:
       - bash
       - -c
       - airflow
+    networks:
+      - airflow-network
 
+# ==============================================
+# VOLUMES
+# ==============================================
 volumes:
   postgres-db-volume:
+    driver: local
+  airflow-logs:
+    driver: local
+
+# ==============================================
+# NETWORKS
+# ==============================================
+networks:
+  airflow-network:
+    driver: bridge

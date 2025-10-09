@@ -1,0 +1,103 @@
+# ==============================================
+# Docker Compose Override - Development
+# ==============================================
+# Este arquivo é carregado automaticamente pelo Docker Compose
+# para sobrescrever configurações específicas de desenvolvimento
+
+services:
+  # ==============================================
+  # AIRFLOW WEBSERVER - Development Overrides
+  # ==============================================
+  airflow-webserver:
+    environment:
+      # Debug mode para desenvolvimento
+      AIRFLOW__WEBSERVER__RELOAD_ON_PLUGIN_CHANGE: 'true'
+      AIRFLOW__WEBSERVER__DEBUG: 'true'
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
+      # Logs mais verbosos
+      AIRFLOW__LOGGING__LOGGING_LEVEL: 'DEBUG'
+    volumes:
+      # Mount code em tempo real para hot reload
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./spark_config:/opt/airflow/spark_config
+    ports:
+      - "8081:8080"
+
+  # ==============================================
+  # AIRFLOW SCHEDULER - Development Overrides
+  # ==============================================
+  airflow-scheduler:
+    environment:
+      AIRFLOW__LOGGING__LOGGING_LEVEL: 'DEBUG'
+      # Processamento mais rápido para desenvolvimento
+      AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: 60
+      AIRFLOW__SCHEDULER__CATCHUP_BY_DEFAULT: 'false'
+
+  # ==============================================
+  # POSTGRES - Development Overrides
+  # ==============================================
+  postgres:
+    environment:
+      # Logs de queries para debug
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    volumes:
+      # Dados persistentes em desenvolvimento
+      - postgres-dev-data:/var/lib/postgresql/data
+    ports:
+      # Expor porta para acesso externo
+      - "5433:5432"
+
+  # ==============================================
+  # JUPYTER NOTEBOOK SERVICE (Development Only)
+  # ==============================================
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: "${AIRFLOW_UID:-50000}:0"
+    env_file:
+      - .env
+    environment:
+      JUPYTER_ENABLE_LAB: 'yes'
+      JUPYTER_TOKEN: 'desenvolvimento'
+    command: |
+      bash -c "
+        pip install jupyterlab &&
+        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='desenvolvimento'
+      "
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./base_dados:/home/jovyan/work/base_dados
+      - ./Resultados:/home/jovyan/work/Resultados
+      - ./spark_config:/home/jovyan/work/spark_config
+    networks:
+      - airflow-network
+    profiles:
+      - jupyter
+
+volumes:
+  postgres-dev-data:
+    driver: local
+
+# ==============================================
+# USAGE INSTRUCTIONS
+# ==============================================
+# 
+# Para usar este arquivo de override:
+# 
+# 1. Desenvolvimento normal:
+#    docker-compose up -d
+# 
+# 2. Com Jupyter Lab:
+#    docker-compose --profile jupyter up -d
+#    Acesse: http://localhost:8888 (token: desenvolvimento)
+# 
+# 3. Apenas Jupyter:
+#    docker-compose up jupyter
+# 
+# 4. Debug completo:
+#    docker-compose logs -f
+#

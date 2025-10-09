@@ -1,50 +1,116 @@
-# Arquivo de gitignore para o projeto
+# ==============================================
+# TrabalhoSBD2 - .gitignore
+# ==============================================
 
-# Airflow
+# ==============================================
+# AIRFLOW
+# ==============================================
 airflow/logs/*
 !airflow/logs/.gitkeep
-airflow/__pycache__/
-*.pyc
-*.pyo
+airflow/plugins/__pycache__/
+airflow/dags/__pycache__/
+airflow/dags/.*
+webserver_config.py
 
-# Environment
-.env
-
-# Python
+# ==============================================
+# PYTHON
+# ==============================================
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# ==============================================
+# JUPYTER NOTEBOOKS
+# ==============================================
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
 *_executed_*.ipynb
 
-# Results
-Resultados/*_executed_*.ipynb
-
-# Docker
+# ==============================================
+# DOCKER & ENVIRONMENT
+# ==============================================
 .docker/
+.env.local
+.env.prod
+.env.staging
 
-# IDE
+# ==============================================
+# DATA FILES (Large datasets)
+# ==============================================
+Resultados/*_executed_*.ipynb
+*.csv
+*.json
+*.parquet
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+
+# Except for documentation/sample files
+!docs/**/*.csv
+!examples/**/*.csv
+!base_dados/**/1_dicionario.md
+!base_dados/**/dimensions.txt
+!base_dados/**/*.txt
+
+# ==============================================
+# LOGS & TEMPORARY
+# ==============================================
+*.log
+*.tmp
+*.bak
+logs/
+*.out
+*.err
+
+# ==============================================
+# SPARK
+# ==============================================
+spark-warehouse/
+metastore_db/
+derby.log
+checkpoint/
+
+# ==============================================
+# DATABASE
+# ==============================================
+*.db
+*.sqlite
+
+# ==============================================
+# IDE & SYSTEM
+# ==============================================
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
 Thumbs.db
 
-# Database
-*.db
-*.sqlite
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.bak
+# ==============================================
+# BACKUPS & LOCAL DEV
+# ==============================================
+backups/
+*.backup
+.local/
+local/
+dev/
