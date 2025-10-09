@@ -7,7 +7,7 @@ import os
 import logging
 
 # Configurar variáveis de ambiente do Spark - PySpark via pip
-os.environ['JAVA_HOME'] = '/usr/lib/jvm/java-11-openjdk-amd64'
+os.environ['JAVA_HOME'] = '/usr/lib/jvm/java-17-openjdk-amd64'
 os.environ['PYSPARK_PYTHON'] = 'python3'
 os.environ['PYSPARK_DRIVER_PYTHON'] = 'python3'
 
