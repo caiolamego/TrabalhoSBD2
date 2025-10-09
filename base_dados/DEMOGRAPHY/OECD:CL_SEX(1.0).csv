@@ -1,0 +1,8 @@
+CL_SEX,"Codelist for concept ""Sex"""
+F,Female
+M,Male
+_N,Non response
+_O,Other
+_T,Total
+_U,Unknown
+_Z,Not applicable

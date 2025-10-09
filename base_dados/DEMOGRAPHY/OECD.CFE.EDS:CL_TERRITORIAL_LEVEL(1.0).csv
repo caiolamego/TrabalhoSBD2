@@ -1,0 +1,10 @@
+CL_TERRITORIAL_LEVEL,name,parent
+CTRY,Country,
+TL2,TL2,
+TL3,TL3,
+FUA,FUA,
+CITY,City,
+OTL,Other territorial levels,
+NOG,Non-official territorial level,OTL
+MACRO_REG,Macro-region,OTL
+_Z,Not applicable,
