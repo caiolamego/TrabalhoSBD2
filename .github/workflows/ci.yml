@@ -10,6 +10,11 @@ jobs:
   deploy:
     # O servidor virtual onde o código será executado (ambiente Linux)
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # Permite que o bot escreva no repositório (para criar/atualizar gh-pages)
+      pages: write    # Permite que o bot atualize o GitHub Pages (Boa prática moderna)
+      id-token: write
     
     steps:
       # Passo 1: Clona seu repositório

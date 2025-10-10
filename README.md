@@ -165,3 +165,42 @@ make clean        # Containers e volumes
 make clean-all    # Tudo + imagens Docker
 ```
 
+# Modelo e Diagrama Entidade-Relacionamento (MER / DER)
+
+Este documento apresenta a estrutura lógica do modelo de dados, ilustrando as entidades (tabelas) e os relacionamentos estabelecidos para integrar os domínios de Contas Externas (BOP, IIP, IRFCL, ER) e Demografia (DEMOGRAPHY).
+
+---
+
+## 1. Diagrama Entidade-Relacionamento (DER)
+
+Primeiramente desenvolveu-se o DER para representar os dados da maneira como foram extraídos:
+
+<img src="./silver/modelagem/dados/der.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
+
+Afim de esclarecer a futura estrutura que será utilizada na camada Gold, foi desenvolvido, também o DER da futura estrutura do Data Lakehouse:
+
+<img src="./silver/modelagem/schema/der_schema.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
+
+## 2. Diagrama Lógico de Dados (DLD)
+
+Complementarmente ao DER, evolui-se os Diagramas Entidade-Relacionamento para um modelo mais próximo do nível físico, os chamados Diagramas Lógicos de Dados (DLD).
+
+Segue, respectivamente, o DLD da estrutura dos dados e da estrutura que será usada na camada Gold.
+
+Dados:
+
+<img src="./silver/modelagem/dados/dld.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
+
+Schema:
+
+<img src="./silver/modelagem/schema/dld_schema.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
+
+
+
+
+
+
+
+
+
+

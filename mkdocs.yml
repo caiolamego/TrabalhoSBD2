@@ -4,9 +4,10 @@ repo_url: https://github.com/caiolamego/TrabalhoSBD2
 nav:
   - Início: index.md
   - 1. Estrutura do Projeto:
-    - Visão Geral: overview/project.md
-    - Coleta de Dados (SDMX/Python): overview/coleta.md
-    - Repositório e Scripts: overview/repo.md
+    - Arquitetura: overview/arquitetura.md
+    - Tecnologias: overview/tecnologias.md
+    - Pipelines: overview/pipelines.md
+    - Spark: overview/spark.md
   - 2. Dicionários de Dados (Bases):
     - Balança de Pagamentos (BOP): dictionaries/BOP.md
     - Demography (DEMO): dictionaries/DEMO.md
