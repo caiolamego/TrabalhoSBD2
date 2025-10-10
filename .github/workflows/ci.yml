@@ -1,17 +1,32 @@
 name: Publicar Documentação MkDocs
 
 on:
+  # O evento que dispara este workflow: um push no branch principal
   push:
     branches:
-      - main # Mude para 'master' se for o seu branch principal
+      - main # Garanta que este seja o nome do seu branch principal (pode ser 'master')
 
 jobs:
   deploy:
+    # O servidor virtual onde o código será executado (ambiente Linux)
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      # Passo 1: Clona seu repositório
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Passo 2: Configura o Python (necessário para rodar o MkDocs)
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: 3.x
-      - run: pip install mkdocs mkdocs-material
-      - run: mkdocs gh-deploy --force 
+          
+      # Passo 3: Instala o MkDocs e o tema Material
+      - name: Install dependencies
+        run: pip install mkdocs mkdocs-material
+
+      # Passo 4: Constrói o site e o publica no branch 'gh-pages'
+      # 'gh-deploy' é um comando que automatiza a construção do site e o push para o branch de publicação.
+      - name: Deploy MkDocs documentation to GitHub Pages
+        run: mkdocs gh-deploy --force
