@@ -4,12 +4,17 @@ Configurações adaptadas para datasets de tamanho médio (até 500K registros)
 """
 
 import os
+import sys
 import logging
 
 # Configurar variáveis de ambiente do Spark - PySpark via pip
 os.environ['JAVA_HOME'] = '/usr/lib/jvm/java-17-openjdk-amd64'
-os.environ['PYSPARK_PYTHON'] = 'python3'
-os.environ['PYSPARK_DRIVER_PYTHON'] = 'python3'
+
+# CRITICAL: Use the SAME Python executable for driver and workers
+# This ensures no version mismatch between driver (3.11) and workers (3.12)
+current_python = sys.executable
+os.environ['PYSPARK_PYTHON'] = current_python
+os.environ['PYSPARK_DRIVER_PYTHON'] = current_python
 
 # Tentar diferentes localizações do Spark
 spark_locations = [
