@@ -1,0 +1,17 @@
+name: Publicar Documentação MkDocs
+
+on:
+  push:
+    branches:
+      - main # Mude para 'master' se for o seu branch principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - run: pip install mkdocs mkdocs-material
+      - run: mkdocs gh-deploy --force 
