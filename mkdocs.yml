@@ -1,0 +1,51 @@
+site_name: Documentação - Integração de Dados Econômicos
+repo_url: https://github.com/caiolamego/TrabalhoSBD2
+
+nav:
+  - Início: index.md
+  - 1. Estrutura do Projeto:
+    - Visão Geral: overview/project.md
+    - Coleta de Dados (SDMX/Python): overview/coleta.md
+    - Repositório e Scripts: overview/repo.md
+  - 2. Dicionários de Dados (Bases):
+    - Balança de Pagamentos (BOP): dictionaries/BOP.md
+    - Demography (DEMO): dictionaries/DEMO.md
+    - Posição de Investimento (IIP): dictionaries/IIP.md
+    - Reservas e Liquidez (IRFCL): dictionaries/IRFCL.md
+    - Taxas de Câmbio (ER): dictionaries/ER.md
+  - 3. Modelagem de Dados:
+    - Modelo Conceitual (MER/DER): modeling/mer-der.md
+  - 4. Análises e Insights:
+    - Notebooks (Exploração): analyses/notebooks.md
+    - Dashboards e Visualização: analyses/dashboards.md
+
+extra_css:
+  - assets/styles.css
+
+theme:
+  name: material
+  language: pt-BR
+
+  icon:
+    repo: fontawesome/brands/github
+
+  logo: assets/money.png # Ícone representativo de dados
+  favicon: assets/database.png # Ícone representativo de dados
+
+  palette:
+    - scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Dark mode
+
+    - scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/toggle-switch
+        name: Light mode
+
+  features:
+    - content.code.copy
