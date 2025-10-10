@@ -83,6 +83,17 @@ Após o processo, os serviços estarão disponíveis em:
 * **Airflow Web UI:** [http://localhost:8081](http://localhost:8081)
  Usuário: `admin` | 🔐 Senha: `admin123`
 * **PostgreSQL:** `localhost:5433`
+* **Data Warehouse:** `data_warehouse` (schemas: staging, bronze, silver, gold)
+
+---
+ **Conexão PostgreSQL**                  
+
+ **Host:**          localhost            
+ **Port:**          5433                 
+ **Database:**      data_warehouse       
+ **Username:**      airflow              
+ **Password:**      airflow              
+ **Show all databases:** (marcado)       
 
 ---
 
