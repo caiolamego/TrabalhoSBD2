@@ -41,7 +41,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__EMAIL__DEFAULT_EMAIL_ON_FAILURE: 'false'
     
     # Python Path
-    PYTHONPATH: "/opt/airflow/spark_config:/opt/airflow/base_dados:/opt/airflow/dags:/opt/airflow/plugins:$PYTHONPATH"
+    PYTHONPATH: "/opt/airflow/spark_config:/opt/airflow/base_dados:/opt/airflow/dags:/opt/airflow/plugins:/opt/airflow/postgres/helpers:/opt/airflow/postgres/plugins:$PYTHONPATH"
     
     # Spark Configuration
     SPARK_HOME: ${SPARK_HOME}
@@ -67,6 +67,7 @@ x-airflow-common: &airflow-common
     - ${AIRFLOW_PROJ_DIR:-.}/spark_config:${AIRFLOW_HOME}/spark_config
     - ${AIRFLOW_PROJ_DIR:-.}/notebooks:${AIRFLOW_HOME}/notebooks
     - ${AIRFLOW_PROJ_DIR:-.}/silver:${AIRFLOW_HOME}/silver
+    - ${AIRFLOW_PROJ_DIR:-.}/postgres:${AIRFLOW_HOME}/postgres
   depends_on: &airflow-common-depends-on
     postgres:
       condition: service_healthy
