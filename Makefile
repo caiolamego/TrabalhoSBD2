@@ -26,7 +26,15 @@ help:
 	@echo "  make status         - Mostra status dos containers"
 	@echo "  make health         - Verifica health dos serviços"
 	@echo ""
-	@echo "🗄️  Data Warehouse:"
+	@echo "🔧 Permissões & Troubleshooting:"
+	@echo "  make fix-permissions    - Corrige permissões de arquivos/diretórios"
+	@echo "  make check-permissions  - Verifica permissões atuais"
+	@echo "  make quick-fix          - Fix rápido (permissões + restart)"
+	@echo "  make emergency-restart  - Restart emergencial completo"
+	@echo "  make test-connections   - Testa conexões PostgreSQL"
+	@echo "  make init-connections   - Configura conexões do Airflow"
+	@echo ""
+	@echo "�🗄️  Data Warehouse:"
 	@echo "  make dw-shell       - Acessa shell do PostgreSQL (Data Warehouse)"
 	@echo "  make dw-connect     - Conecta ao banco data_warehouse via psql"
 	@echo "  make dw-backup      - Faz backup do banco data_warehouse"
@@ -117,6 +125,9 @@ init:
 	@echo "📁 Criando diretórios necessários..."
 	@mkdir -p airflow/{dags,logs,plugins,config}
 	@mkdir -p {base_dados,Resultados,spark_config,notebooks,db_init}
+	@echo "🔧 Corrigindo permissões..."
+	@chmod +x fix-permissions.sh
+	@./fix-permissions.sh
 	@echo "🧹 Limpando volumes antigos..."
 	$(DC) down -v 2>/dev/null || true
 	@echo "🔨 Buildando imagens..."
@@ -135,6 +146,51 @@ init:
 shell:
 	@echo "🐚 Acessando shell do container Airflow..."
 	$(DC) exec airflow-webserver bash
+
+# ==============================================
+# PERMISSÕES & TROUBLESHOOTING
+# ==============================================
+fix-permissions:
+	@echo "🔧 Corrigindo permissões de arquivos e diretórios..."
+	@chmod +x fix-permissions.sh entrypoint.sh 2>/dev/null || true
+	@./fix-permissions.sh
+	@echo "✅ Permissões corrigidas!"
+
+check-permissions:
+	@echo "🔍 Verificando permissões dos diretórios importantes:"
+	@echo "  airflow/     -> $$(stat -c '%a %U:%G' airflow 2>/dev/null || echo 'N/A')"
+	@echo "  Resultados/  -> $$(stat -c '%a %U:%G' Resultados 2>/dev/null || echo 'N/A')"
+	@echo "  silver/      -> $$(stat -c '%a %U:%G' silver 2>/dev/null || echo 'N/A')"
+	@echo "  notebooks/   -> $$(stat -c '%a %U:%G' notebooks 2>/dev/null || echo 'N/A')"
+	@echo "  base_dados/  -> $$(stat -c '%a %U:%G' base_dados 2>/dev/null || echo 'N/A')"
+
+quick-fix:
+	@echo "🚀 Executando fix rápido..."
+	@$(MAKE) fix-permissions
+	@$(MAKE) restart
+	@echo "✅ Fix rápido concluído!"
+
+emergency-restart:
+	@echo "🚨 RESTART EMERGENCIAL..."
+	@echo "🛑 Parando todos os serviços..."
+	@$(DC) down
+	@echo "🔧 Corrigindo permissões..."
+	@chmod +x fix-permissions.sh entrypoint.sh 2>/dev/null || true
+	@./fix-permissions.sh
+	@echo "🚀 Reiniciando serviços..."
+	@$(DC) up -d
+	@echo "✅ Sistema reiniciado!"
+	@echo "📊 Acesse: http://localhost:8081"
+
+test-connections:
+	@echo "🔍 Testando conexões PostgreSQL..."
+	@$(DC) exec airflow-webserver airflow connections test postgres_default || true
+	@$(DC) exec airflow-webserver airflow connections test postgres_dw || true
+
+init-connections:
+	@echo "🔗 Configurando conexões do Airflow..."
+	@$(DC) exec airflow-webserver /opt/airflow/config/init_connections.sh
+	@echo "✅ Conexões configuradas!"
 
 # ==============================================
 # UTILITÁRIOS DE DESENVOLVIMENTO
@@ -214,3 +270,66 @@ dw-info:
 	@echo ""
 	@echo "Para listar tabelas:"
 	@echo "  make dw-list-tables"
+
+# ==============================================
+# VERIFICAÇÃO DE CONEXÕES E DADOS
+# ==============================================
+check-all-databases:
+	@echo "🔍 VERIFICANDO TODOS OS BANCOS DE DADOS..."
+	@echo ""
+	@echo "================================================"
+	@echo "📊 BANCO: airflow (metadados do Airflow)"
+	@echo "================================================"
+	@echo "Conexão Airflow: postgres_default"
+	@echo "User: airflow | Database: airflow"
+	@echo ""
+	@echo "--- Schemas disponíveis ---"
+	@$(DC) exec postgres psql -U airflow -d airflow -c "\dn" || true
+	@echo ""
+	@echo "--- Tabelas no schema bronze ---"
+	@$(DC) exec postgres psql -U airflow -d airflow -c "\dt bronze.*" || true
+	@echo ""
+	@echo "--- Tabelas no schema silver ---"
+	@$(DC) exec postgres psql -U airflow -d airflow -c "\dt silver.*" || true
+	@echo ""
+	@echo "================================================"
+	@echo "🏦 BANCO: data_warehouse (dados analíticos)"
+	@echo "================================================"
+	@echo "Conexão Airflow: postgres_dw"
+	@echo "User: dw_user | Database: data_warehouse"
+	@echo ""
+	@echo "--- Schemas disponíveis ---"
+	@$(DC) exec postgres psql -U dw_user -d data_warehouse -c "\dn" || true
+	@echo ""
+	@echo "--- Tabelas no schema bronze ---"
+	@$(DC) exec postgres psql -U dw_user -d data_warehouse -c "\dt bronze.*" || true
+	@echo ""
+	@echo "--- Tabelas no schema silver ---"
+	@$(DC) exec postgres psql -U dw_user -d data_warehouse -c "\dt silver.*" || true
+	@echo ""
+	@echo "✅ Verificação completa!"
+
+check-bop-data:
+	@echo "🔍 VERIFICANDO ONDE ESTÁ A TABELA bop_clean..."
+	@echo ""
+	@echo "📊 Verificando banco AIRFLOW..."
+	@$(DC) exec postgres psql -U airflow -d airflow -c "SELECT 'AIRFLOW - bronze.bop_clean' as location, COUNT(*) as total_rows FROM bronze.bop_clean;" 2>/dev/null || echo "❌ Não encontrada no airflow.bronze"
+	@echo ""
+	@echo "🏦 Verificando banco DATA_WAREHOUSE..."
+	@$(DC) exec postgres psql -U dw_user -d data_warehouse -c "SELECT 'DATA_WAREHOUSE - bronze.bop_clean' as location, COUNT(*) as total_rows FROM bronze.bop_clean;" 2>/dev/null || echo "❌ Não encontrada no data_warehouse.bronze"
+	@echo ""
+	@echo "✅ Verificação completa!"
+
+verify-connections:
+	@echo "🔗 VERIFICANDO CONEXÕES DO AIRFLOW..."
+	@echo ""
+	@echo "--- Lista de conexões configuradas ---"
+	@$(DC) exec airflow-webserver airflow connections list
+	@echo ""
+	@echo "--- Testando postgres_default (banco airflow) ---"
+	@$(DC) exec airflow-webserver airflow connections test postgres_default || true
+	@echo ""
+	@echo "--- Testando postgres_dw (banco data_warehouse) ---"
+	@$(DC) exec airflow-webserver airflow connections test postgres_dw || true
+	@echo ""
+	@echo "✅ Testes de conexão completos!"

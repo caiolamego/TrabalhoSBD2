@@ -153,8 +153,25 @@ services:
     command:
       - -c
       - |
+        echo "🔧 Inicializando Airflow e ajustando permissões..."
+        
+        # Criar diretórios necessários
         mkdir -p /sources/logs /sources/dags /sources/plugins /sources/config
+        mkdir -p /opt/airflow/Resultados /opt/airflow/silver /opt/airflow/notebooks
+        
+        # Ajustar permissões dos diretórios do Airflow
         chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins,config}
+        chmod -R 777 /sources/{logs,dags,plugins,config}
+        
+        # Ajustar permissões dos diretórios de dados
+        chmod -R 777 /opt/airflow/Resultados || true
+        chmod -R 777 /opt/airflow/silver || true
+        chmod -R 777 /opt/airflow/notebooks || true
+        chmod -R 777 /opt/airflow/base_dados || true
+        
+        echo "✅ Permissões ajustadas!"
+        
+        # Inicializar Airflow
         exec /entrypoint airflow version
     environment:
       <<: *airflow-common-env
@@ -168,6 +185,10 @@ services:
       - airflow-network
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/airflow:/sources
+      - ${AIRFLOW_PROJ_DIR:-.}/Resultados:/opt/airflow/Resultados
+      - ${AIRFLOW_PROJ_DIR:-.}/silver:/opt/airflow/silver
+      - ${AIRFLOW_PROJ_DIR:-.}/notebooks:/opt/airflow/notebooks
+      - ${AIRFLOW_PROJ_DIR:-.}/base_dados:/opt/airflow/base_dados
 
   # ==============================================
   # AIRFLOW CLI (DEBUG PROFILE)

@@ -58,9 +58,30 @@ USER airflow
 # Set Python path to include project modules
 ENV PYTHONPATH="/opt/airflow/spark_config:/opt/airflow/base_dados:/opt/airflow/dags:/opt/airflow/plugins"
 
-# Create necessary directories
-RUN mkdir -p /opt/airflow/{dags,logs,plugins,config,base_dados,Resultados,spark_config,notebooks}
+# ==============================================
+# DIRECTORY STRUCTURE & PERMISSIONS
+# ==============================================
+# Switch to root to create directories with proper permissions
+USER root
+
+# Create all necessary directories
+RUN mkdir -p /opt/airflow/{dags,logs,plugins,config,base_dados,Resultados,spark_config,notebooks,silver}
+
+# Set proper ownership and permissions
+# 777 permissions to avoid permission issues with mounted volumes
+RUN chown -R airflow:0 /opt/airflow && \
+    chmod -R 777 /opt/airflow/{logs,Resultados,silver,notebooks,base_dados,spark_config}
+
+# Copy custom entrypoint
+COPY entrypoint.sh /custom-entrypoint.sh
+RUN chmod +x /custom-entrypoint.sh
+
+# Switch back to airflow user
+USER airflow
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
+
+# Use custom entrypoint
+ENTRYPOINT ["/custom-entrypoint.sh"]
