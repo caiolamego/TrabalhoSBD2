@@ -1,33 +1,46 @@
-## Arquitetura do Sistema
+## Arquitetura do Pipeline
 
-O sistema deverá seguir a arquitetura respeitando o Star Schema com as camadas Raw, Silver e Gold. Atualmente, a estrutura se encontra em andamento já na camada Silver, da seguinte maneira:
+O pipeline segue um desenho clássico de Lakehouse com camadas Bronze, Silver e futura Gold, orquestrado pelo Airflow:
+
+- Coleta (Bronze): notebooks/scripts em `base_dados/` acessam a API SDMX do FMI e gravam CSV/Parquet em `Resultados/`.
+- Transformação (Silver): notebook `silver/bronze_silver.ipynb` (executado por DAG) normaliza e integra dados para a camada Silver, podendo carregar em PostgreSQL.
+- Orquestração: DAGs em `airflow/dags/` coordenam a execução, logs e dependências.
+- Armazenamento: PostgreSQL (schemas bronze/silver/gold) e arquivos analíticos (Parquet/CSV).
+
+### Diagrama do fluxo (alto nível)
+
+```mermaid
+flowchart LR
+		subgraph Orquestração [Airflow]
+			A[DAGs: coleta e transformação]
+		end
+		subgraph Coleta [Bronze]
+			B[API SDMX FMI → CSV/Parquet]
+		end
+		subgraph Transformação [Silver]
+			C[PySpark\nbronze_silver.ipynb]
+		end
+		subgraph Armazenamento [PostgreSQL/Arquivos]
+			D[(Schemas: bronze/silver/gold)]
+			E[[Parquet/CSV]]
+		end
+
+		A --> B --> C --> D
+		C --> E
+```
+
+### Estrutura do repositório (resumo)
 
 ```
 TrabalhoSBD2/
 ├── docker-compose.yml      # Orquestração dos serviços (Airflow, Spark, Postgres)
-├── Makefile               # Automação de build e execução
-├── .env                    # Variáveis de ambiente
+├── Makefile                # Automação de build e execução
 ├── requirements.txt        # Dependências Python
-│
-├── airflow/                # Configurações e DAGs do Airflow
-│   ├── dags/                  # Pipelines ETL (coleta, limpeza e transformação)
-│   ├── logs/                  # Logs de execução
-│   ├── plugins/               # Plugins e hooks customizados
-│   └── config/                # Configurações adicionais
-│
-├── base_dados/             # Dados brutos e processados
-│   ├── BOP/                   # Balance of Payments
-│   ├── ER/                    # Exchange Rates
-│   ├── IIP/                   # International Investment Position
-│   ├── IRFCL/                 # International Reserves
-│   └── Resultados/            # Saídas finais dos pipelines
-├
-├── Silver/ 
-│   ├── modelagem/  
-|
-├── Gold/ 
-|______
-├── spark_config/           # Configurações e scripts Spark
-├── notebooks/              # Jupyter notebooks analíticos
-└── Resultados/             # Indicadores agregados e relatórios
+├── airflow/                # DAGs, logs, plugins e configs do Airflow
+├── base_dados/             # Notebooks/scripts de coleta e análises
+├── silver/                 # Notebooks e scripts de transformação (Bronze→Silver)
+├── spark_config/           # Helpers e configs do Spark
+├── postgres/               # Scripts de inicialização do DW
+├── notebooks/              # Notebooks auxiliares
+└── Resultados/             # Saídas e execuções registradas
 ```
