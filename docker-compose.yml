@@ -125,6 +125,26 @@ services:
         condition: service_completed_successfully
 
   # ==============================================
+  # ONE-SHOT: TRIGGER ALL DAGS (executa uma vez após webserver estar healthy)
+  # ==============================================
+  airflow-trigger:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        echo "🔁 Executando trigger_all_dags.sh para acionar todas as DAGs..."
+        bash /opt/airflow/trigger_all_dags.sh || true
+    depends_on:
+      airflow-webserver:
+        condition: service_healthy
+    restart: 'no'
+    networks:
+      - airflow-network
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/airflow/trigger_all_dags.sh:/opt/airflow/trigger_all_dags.sh:ro
+
+  # ==============================================
   # AIRFLOW SCHEDULER
   # ==============================================
   airflow-scheduler:
