@@ -1,24 +1,18 @@
 site_name: Documentação - Integração de Dados Econômicos
-repo_url: https://github.com/caiolamego/TrabalhoSBD2
+site_dir: docs/site
 
 nav:
   - Início: index.md
-  - 1. Estrutura do Projeto:
-    - Arquitetura: overview/arquitetura.md
-    - Tecnologias: overview/tecnologias.md
-    - Pipelines: overview/pipelines.md
-    - Spark: overview/spark.md
-  - 2. Dicionários de Dados (Bases):
+  - 1. Como subir o ambiente: overview/como-subir.md
+  - 2. Arquitetura do Pipeline: overview/arquitetura.md
+  - 3. Modelagem (MER/DER): modeling/mer-der.md
+  - 4. Arquivos do Projeto: overview/arquivos.md
+  - 5. Dicionários de Dados:
     - Balança de Pagamentos (BOP): dictionaries/BOP.md
     - Demography (DEMO): dictionaries/DEMO.md
     - Posição de Investimento (IIP): dictionaries/IIP.md
     - Reservas e Liquidez (IRFCL): dictionaries/IRFCL.md
     - Taxas de Câmbio (ER): dictionaries/ER.md
-  - 3. Modelagem de Dados:
-    - Modelo Conceitual (MER/DER): modeling/mer-der.md
-  - 4. Análises e Insights:
-    - Notebooks (Exploração): analyses/notebooks.md
-    - Dashboards e Visualização: analyses/dashboards.md
 
 extra_css:
   - assets/styles.css
@@ -26,27 +20,26 @@ extra_css:
 theme:
   name: material
   language: pt-BR
-
-  icon:
-    repo: fontawesome/brands/github
-
-  logo: assets/money.png # Ícone representativo de dados
-  favicon: assets/database.png # Ícone representativo de dados
-
-  palette:
-    - scheme: default
-      primary: blue
-      accent: light blue
-      toggle:
-        icon: material/toggle-switch-off-outline
-        name: Dark mode
-
-    - scheme: slate
-      primary: blue
-      accent: light blue
-      toggle:
-        icon: material/toggle-switch
-        name: Light mode
-
   features:
     - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - attr_list
+  - tables
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.details
+  - pymdownx.tabbed
+
+plugins:
+  - search
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - assets/mermaid-init.js

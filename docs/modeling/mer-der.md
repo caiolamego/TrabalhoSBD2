@@ -1,6 +1,6 @@
-# Modelo e Diagrama Entidade-Relacionamento (MER / DER)
+# Modelagem de Dados (MER / DER)
 
-Este documento apresenta a estrutura lógica do modelo de dados, ilustrando as entidades (tabelas) e os relacionamentos estabelecidos para integrar os domínios de Contas Externas (BOP, IIP, IRFCL, ER) e Demografia (DEMOGRAPHY).
+Este documento apresenta a estrutura lógica do modelo de dados, ilustrando as entidades (tabelas) e relacionamentos para integrar os domínios de Contas Externas (BOP, IIP, IRFCL, ER) e Demografia (DEMOGRAPHY).
 
 ---
 
@@ -16,7 +16,7 @@ Afim de esclarecer a futura estrutura que será utilizada na camada Gold, foi de
 
 ## 2. Diagrama Lógico de Dados (DLD)
 
-Complementarmente ao DER, evolui-se os Diagramas Entidade-Relacionamento para um modelo mais próximo do nível físico, os chamados Diagramas Lógicos de Dados (DLD).
+Complementarmente ao DER, os Diagramas Lógicos de Dados (DLD) aproximam o desenho do nível físico adotado na camada Gold.
 
 Segue, respectivamente, o DLD da estrutura dos dados e da estrutura que será usada na camada Gold.
 
@@ -24,7 +24,7 @@ Dados:
 
 <img src="../../assets/dld.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
 
-O Schema será separado em uma grande tabela Fato, centralizando todos os dados. Ela terá relação direta com as Dimensões: País, Frequência e Indicador, conforme ilustrado abaixo.
+O schema previsto concentra uma tabela Fato principal, relacionada diretamente às dimensões País, Frequência e Indicador.
 
 <img src="../../assets/dld_schema.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
 

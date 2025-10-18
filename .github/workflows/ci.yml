@@ -1,37 +1,52 @@
-name: Publicar Documentação MkDocs
+name: Deploy Docs (MkDocs)
 
 on:
-  # O evento que dispara este workflow: um push no branch principal
   push:
     branches:
-      - main # Garanta que este seja o nome do seu branch principal (pode ser 'master')
+      - main
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  deploy:
-    # O servidor virtual onde o código será executado (ambiente Linux)
+  build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write # Permite que o bot escreva no repositório (para criar/atualizar gh-pages)
-      pages: write    # Permite que o bot atualize o GitHub Pages (Boa prática moderna)
-      id-token: write
-    
     steps:
-      # Passo 1: Clona seu repositório
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # Passo 2: Configura o Python (necessário para rodar o MkDocs)
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.x
-          
-      # Passo 3: Instala o MkDocs e o tema Material
-      - name: Install dependencies
-        run: pip install mkdocs mkdocs-material
+          python-version: '3.x'
 
-      # Passo 4: Constrói o site e o publica no branch 'gh-pages'
-      # 'gh-deploy' é um comando que automatiza a construção do site e o push para o branch de publicação.
-      - name: Deploy MkDocs documentation to GitHub Pages
-        run: mkdocs gh-deploy --force
+      - name: Install documentation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r docs/requirements-docs.txt
+
+      - name: Build site
+        run: mkdocs build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

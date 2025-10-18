@@ -1,14 +1,14 @@
 # ==============================================
-# TrabalhoSBD2 - Airflow with Spark Support
+# TrabalhoSBD2 - Airflow with Spark Support (Python 3.11)
 # ==============================================
-FROM apache/airflow:2.9.1-python3.12
+FROM apache/airflow:2.9.1-python3.11
 
 # ==============================================
 # SYSTEM DEPENDENCIES
 # ==============================================
 USER root
 
-# Install Java 17 and system dependencies for Spark
+# Instala Java 11 e deps do sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openjdk-17-jdk-headless \
     wget \
@@ -25,63 +25,54 @@ ENV PATH=$PATH:$JAVA_HOME/bin
 # PYTHON DEPENDENCIES
 # ==============================================
 USER airflow
-
-# Set working directory
 WORKDIR /opt/airflow
 
-# Copy requirements first for better Docker layer caching
+# Instala dependências Python
 COPY requirements.txt .
-
-# Install Python packages
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # ==============================================
 # SPARK CONFIGURATION
 # ==============================================
-# Configure Spark environment variables
-ENV SPARK_HOME=/home/airflow/.local/lib/python3.12/site-packages/pyspark
+# Ajusta SPARK_HOME para o site-packages do Python 3.11
+ENV SPARK_HOME=/home/airflow/.local/lib/python3.11/site-packages/pyspark
 ENV PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
 ENV PYSPARK_PYTHON=python3
 ENV PYSPARK_DRIVER_PYTHON=python3
+# (opcional, ajuda em ambientes com warning de hostname)
+ENV SPARK_LOCAL_IP=127.0.0.1
 
-# Create Spark compatibility links
+# Cria link de compatibilidade em /opt/spark
 USER root
 RUN mkdir -p /opt && \
-    ln -sf /home/airflow/.local/lib/python3.12/site-packages/pyspark /opt/spark
+    ln -sf /home/airflow/.local/lib/python3.11/site-packages/pyspark /opt/spark
 
 # ==============================================
 # FINAL SETUP
 # ==============================================
 USER airflow
 
-# Set Python path to include project modules
+# PYTHONPATH do projeto
 ENV PYTHONPATH="/opt/airflow/spark_config:/opt/airflow/base_dados:/opt/airflow/dags:/opt/airflow/plugins"
 
 # ==============================================
 # DIRECTORY STRUCTURE & PERMISSIONS
 # ==============================================
-# Switch to root to create directories with proper permissions
 USER root
-
-# Create all necessary directories
-RUN mkdir -p /opt/airflow/{dags,logs,plugins,config,base_dados,Resultados,spark_config,notebooks,silver}
-
-# Set proper ownership and permissions
-# 777 permissions to avoid permission issues with mounted volumes
-RUN chown -R airflow:0 /opt/airflow && \
+RUN mkdir -p /opt/airflow/{dags,logs,plugins,config,base_dados,Resultados,spark_config,notebooks,silver} && \
+    chown -R airflow:0 /opt/airflow && \
     chmod -R 777 /opt/airflow/{logs,Resultados,silver,notebooks,base_dados,spark_config}
 
-# Copy custom entrypoint
+# entrypoint customizado
 COPY entrypoint.sh /custom-entrypoint.sh
 RUN chmod +x /custom-entrypoint.sh
 
-# Switch back to airflow user
+# volta para o usuário airflow
 USER airflow
 
-# Health check
+# Healthcheck
 HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:8080/health || exit 1
 
-# Use custom entrypoint
 ENTRYPOINT ["/custom-entrypoint.sh"]

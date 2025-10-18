@@ -1,33 +1,28 @@
 
+# Projeto ETL - Dados do FMI
 
-# Projeto ETL - Dados do FMI (TrabalhoSBD2)
+Bem-vindo à documentação do TrabalhoSBD2. Este projeto implementa um pipeline de ETL para coletar, transformar e armazenar indicadores do Fundo Monetário Internacional (FMI) com foco em automação, reprodutibilidade e rastreabilidade.
 
-[![Airflow](https://img.shields.io/badge/Apache%20Airflow-2.9.1-blue)](https://airflow.apache.org/)
-[![Spark](https://img.shields.io/badge/Apache%20Spark-3.5.1-orange)](https://spark.apache.org/)
-[![Python](https://img.shields.io/badge/Python-3.12-green)](https://python.org/)
-[![Docker](https://img.shields.io/badge/Docker-Compose-blue)](https://docker.com/)
+## Visão geral do projeto
 
-> **Objetivo:** Desenvolver um **pipeline de ETL (Extract, Transform, Load)** automatizado para **coleta, processamento e análise de dados do Fundo Monetário Internacional (FMI)**, utilizando **Apache Airflow** e **Apache Spark**.
+- Orquestração: Apache Airflow (DAGs para coleta e transformação)
+- Transformação: PySpark nas camadas Bronze → Silver (futura Gold)
+- Armazenamento: PostgreSQL e arquivos analíticos (Parquet/CSV)
+- Entrada de dados: API SDMX do FMI + notebooks de coleta e análise
 
----
+Para começar rapidamente:
 
-## Visão Geral
+- Como subir o ambiente: veja “1. Como subir o ambiente”
+- Arquitetura do pipeline: veja “2. Arquitetura do Pipeline”
+- Modelagem de dados (MER/DER): veja “3. Modelagem (MER/DER)”
+- Referência de arquivos essenciais: veja “4. Arquivos do Projeto”
 
-Este projeto implementa uma arquitetura moderna de **ETL orientada a dados**, capaz de coletar informações diretamente da **API SDMX do FMI**, transformá-las via **Spark** e armazenar os resultados em formato analítico (Parquet, CSV e JSON).
-Todo o fluxo é **automatizado pelo Airflow**, garantindo escalabilidade, reprodutibilidade e rastreabilidade completa do processo.
-
-
-<img src="./assets/dld.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
-
-Schema:
+Imagens de referência de modelagem estão em `docs/assets` e nas páginas de Modelagem e Arquitetura.
+<img src="./assets/dld_schema.png" alt="Diagrama Lógico - Schema Gold" style="max-width: 100%; height: auto;">
+Imagens de referência de modelagem estão disponíveis em `docs/assets` e também embutidas nas páginas de Modelagem e Arquitetura.
 
 <img src="./assets/dld_schema.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
 
----
-     
 
-
-
----
 
 
