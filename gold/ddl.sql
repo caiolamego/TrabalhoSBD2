@@ -17,7 +17,6 @@ CREATE TABLE IF NOT EXISTS dw.Dim_Tempo (
 CREATE TABLE IF NOT EXISTS dw.Dim_Indicador (
     SRK_Indicador SERIAL PRIMARY KEY,
     CodigoIndicador VARCHAR(50) NOT NULL UNIQUE,
-    DescricaoIndicador VARCHAR(255) NOT NULL,
     CategoriaIndicador VARCHAR(50) NOT NULL,
     UnidadeMedida VARCHAR(50)
 );
