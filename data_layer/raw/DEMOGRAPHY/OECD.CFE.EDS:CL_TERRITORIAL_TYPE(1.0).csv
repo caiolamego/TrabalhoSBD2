@@ -1,0 +1,38 @@
+CL_TERRITORIAL_TYPE,name,parent
+TYPO_METRO,Total typology on access to city,
+MR,Metropolitan region,TYPO_METRO
+MR_L,Metropolitan large region,MR
+MR_M,Metropolitan midsize region,MR
+NMR_M,Region near a metropolitan area,TYPO_METRO
+NMR_FAR,Region far from a midsize/large FUA,TYPO_METRO
+NMR_S,Region near a small FUA,NMR_FAR
+NMR_R,Remote region,NMR_FAR
+TYPO_RURB,Total typology urban-rural,
+PU,Predominantly urban region,TYPO_RURB
+IN,Intermediate region,TYPO_RURB
+PR,Rural region,TYPO_RURB
+PRC,Predominantly rural close to a city,PR
+PRR,Predominantly rural remote,PR
+SAU_DEGURBA,Total degree of urbanisation (SAU based),
+SAU_DEG1,Cities,SAU_DEGURBA
+SAU_DEG2,Towns and semi-dense areas,SAU_DEGURBA
+SAU_DEG21,Dense towns,SAU_DEG2
+SAU_DEG22,Semi-dense towns,SAU_DEG2
+SAU_DEG23,Suburban or peri-urban areas,SAU_DEG2
+SAU_DEG3,Rural areas,SAU_DEGURBA
+SAU_DEG31,Villages,SAU_DEG3
+SAU_DEG32,Dispersed rural areas,SAU_DEG3
+SAU_DEG33,Mostly uninhabited areas,SAU_DEG3
+GRID_DEGURBA,Total degree of urbanisation (grid-cells based),
+GRID_DEG1,Urban centres,GRID_DEGURBA
+GRID_DEG2,Urban clusters,GRID_DEGURBA
+GRID_DEG21,Dense urban clusters,GRID_DEG2
+GRID_DEG22,Semi-dense urban clusters,GRID_DEG2
+GRID_DEG23,Suburban or peri-urban grid cells,GRID_DEG2
+GRID_DEG3,Rural grid cells,GRID_DEGURBA
+GRID_DEG31,Rural clusters,GRID_DEG3
+GRID_DEG32,Low-density rural grid cells,GRID_DEG3
+GRID_DEG33,Very low-density rural grid cells,GRID_DEG3
+_O,Other,
+_U,No data/unknown,
+_Z,Not applicable,

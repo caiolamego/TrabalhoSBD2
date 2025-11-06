@@ -41,7 +41,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__EMAIL__DEFAULT_EMAIL_ON_FAILURE: 'false'
     
     # Python Path
-    PYTHONPATH: "/opt/airflow/spark_config:/opt/airflow/base_dados:/opt/airflow/dags:/opt/airflow/plugins:/opt/airflow/postgres/helpers:/opt/airflow/postgres/plugins:$PYTHONPATH"
+    PYTHONPATH: "/opt/airflow/spark_config:/opt/airflow/data_layer/raw:/opt/airflow/dags:/opt/airflow/plugins:/opt/airflow/postgres/helpers:/opt/airflow/postgres/plugins:$PYTHONPATH"
     
     # Spark Configuration
     SPARK_HOME: ${SPARK_HOME}
@@ -62,11 +62,9 @@ x-airflow-common: &airflow-common
     - ${AIRFLOW_PROJ_DIR:-.}/airflow/logs:${AIRFLOW_HOME}/logs
     - ${AIRFLOW_PROJ_DIR:-.}/airflow/config:${AIRFLOW_HOME}/config
     - ${AIRFLOW_PROJ_DIR:-.}/airflow/plugins:${AIRFLOW_HOME}/plugins
-    - ${AIRFLOW_PROJ_DIR:-.}/base_dados:${AIRFLOW_HOME}/base_dados
-    - ${AIRFLOW_PROJ_DIR:-.}/Resultados:${AIRFLOW_HOME}/Resultados
+    - ${AIRFLOW_PROJ_DIR:-.}/data_layer:${AIRFLOW_HOME}/data_layer
     - ${AIRFLOW_PROJ_DIR:-.}/spark_config:${AIRFLOW_HOME}/spark_config
     - ${AIRFLOW_PROJ_DIR:-.}/notebooks:${AIRFLOW_HOME}/notebooks
-    - ${AIRFLOW_PROJ_DIR:-.}/silver:${AIRFLOW_HOME}/silver
     - ${AIRFLOW_PROJ_DIR:-.}/postgres:${AIRFLOW_HOME}/postgres
   depends_on: &airflow-common-depends-on
     postgres:
@@ -177,17 +175,15 @@ services:
         
         # Criar diretórios necessários
         mkdir -p /sources/logs /sources/dags /sources/plugins /sources/config
-        mkdir -p /opt/airflow/Resultados /opt/airflow/silver /opt/airflow/notebooks
+        mkdir -p /opt/airflow/data_layer/raw/Resultados /opt/airflow/data_layer/silver /opt/airflow/notebooks
         
         # Ajustar permissões dos diretórios do Airflow
         chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins,config}
         chmod -R 777 /sources/{logs,dags,plugins,config}
         
         # Ajustar permissões dos diretórios de dados
-        chmod -R 777 /opt/airflow/Resultados || true
-        chmod -R 777 /opt/airflow/silver || true
+        chmod -R 777 /opt/airflow/data_layer || true
         chmod -R 777 /opt/airflow/notebooks || true
-        chmod -R 777 /opt/airflow/base_dados || true
         
         echo "✅ Permissões ajustadas!"
         
@@ -205,10 +201,8 @@ services:
       - airflow-network
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/airflow:/sources
-      - ${AIRFLOW_PROJ_DIR:-.}/Resultados:/opt/airflow/Resultados
-      - ${AIRFLOW_PROJ_DIR:-.}/silver:/opt/airflow/silver
+      - ${AIRFLOW_PROJ_DIR:-.}/data_layer:/opt/airflow/data_layer
       - ${AIRFLOW_PROJ_DIR:-.}/notebooks:/opt/airflow/notebooks
-      - ${AIRFLOW_PROJ_DIR:-.}/base_dados:/opt/airflow/base_dados
 
   # ==============================================
   # AIRFLOW CLI (DEBUG PROFILE)

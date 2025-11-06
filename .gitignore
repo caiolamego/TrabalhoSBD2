@@ -58,7 +58,7 @@ MANIFEST
 # DATA FILES (Large datasets)
 # ==============================================
 Resultados/*_executed_*.ipynb
-*.csv
+
 *.json
 *.parquet
 *.pkl

@@ -1,0 +1,15 @@
+SDMX:CL_FREQ(2.1): This code list provides a set of values indicating
+					the "frequency" of the data (e.g. weekly, monthly, quarterly). The concept
+					"frequency" may refer to various stages in the production process, e.g. data
+					collection or data dissemination. For example, a time series could be
+					disseminated at annual frequency but the underlying data are compiled monthly.
+					The code list is applicable for all different uses of
+					"frequency".
+OECD.CFE.EDS:CL_TERRITORIAL_LEVEL(1.0): Code list for regional territorial level
+OECD.CFE.EDS:CL_TERRITORIAL_TYPE(1.0): 
+OECD:CL_UNIT_MEASURE(1.7): Unit in which the data values are expressed.
+OECD.CFE.EDS:CL_MEASURE(1.0): Code list used for measures in subnational statistics
+OECD:CL_AGE(1.1): 
+OECD:CL_SEX(1.0): This code list provides coded information about the state of being male or female.
+SDMX:CL_UNIT_MULT(1.1): This code list provides code values for indicating the magnitude in the units of measurement. More information about this code list and SDMX code lists in general (e.g. list of generic codes for expressing general concepts like "Total", "Unknown", etc.;
+          syntaxes for the creation of further codes; general guidelines for the creation of SDMX code lists) can be found at this address: https://sdmx.org/?page_id=4345.

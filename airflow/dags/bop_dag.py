@@ -21,8 +21,8 @@ default_args = {
 
 def execute_notebook():
     """Executa o notebook usando papermill"""
-    input_notebook = '/opt/airflow/base_dados/BOP/2_coleta.ipynb'
-    output_notebook = f'/opt/airflow/Resultados/BOP_executed_{datetime.now().strftime("%Y%m%d_%H%M%S")}.ipynb'
+    input_notebook = '/opt/airflow/data_layer/raw/BOP/2_coleta.ipynb'
+    output_notebook = f'/opt/airflow/data_layer/raw/Resultados/BOP_executed_{datetime.now().strftime("%Y%m%d_%H%M%S")}.ipynb'
     
     pm.execute_notebook(
         input_notebook,
@@ -48,7 +48,7 @@ with DAG(
 
     task_check_output = BashOperator(
         task_id='check_bop_output',
-        bash_command='ls -lh /opt/airflow/Resultados/BOP.csv',
+        bash_command='ls -lh /opt/airflow/data_layer/raw/Resultados/BOP.csv',
     )
 
     task_execute_notebook >> task_check_output

@@ -1,0 +1,311 @@
+CL_AGE,Codelist for age
+_T,Total
+_U,Unknown
+_X,Unspecified
+BIRTH,At birth
+YOUNG,Young
+MID,Middle-aged
+OLD,Old
+RETIRE,National retirement age
+DEPENDENT,Dependent
+Y0,0 years
+D29T60,From 29 to 60 days
+D91T365,From 91 to 365 days
+Y_LT1,Less than 1 years
+Y1,1 years
+Y1T2,From 1 to 2 years
+Y1T4,From 1 to 4 years
+Y_LT2,Less than 2 years
+Y_LE2,2 years or less
+Y2,2 years
+Y_LT3,Less than 3 years
+Y3,3 years
+Y3T4,From 3 to 4 years
+Y3T5,From 3 to 5 years
+Y_LT4,Less than 4 years
+Y_LE4,4 years or less
+Y4,4 years
+Y_LT5,Less than 5 years
+Y_LE5,5 years or less
+Y5,5 years
+Y5T9,From 5 to 9 years
+Y5T14,From 5 to 14 years
+Y_GE5,5 years or over
+Y_GT5,Over 5 years
+Y_LT6,Less than 6 years
+Y6,6 years
+Y6T9,From 6 to 9 years
+Y6T14,From 6 to 14 years
+Y7,7 years
+Y_GT7,Over 7 years
+Y_LE8,8 years or less
+Y8,8 years
+Y_LE9,9 years or less
+Y9,9 years
+Y_LT10,Less than 10 years
+Y_LE10,10 years or less
+Y10,10 years
+Y10T14,From 10 to 14 years
+Y_GE10,10 years or over
+Y_GT10,Over 10 years
+Y_LT11,Less than 11 years
+Y11,11 years
+Y12,12 years
+Y_LE13,13 years or less
+Y13,13 years
+Y_LT14,Less than 14 years
+Y14,14 years
+Y_LT15,Less than 15 years
+Y_LE15,15 years or less
+Y_LT15_GE65,Less than 15 years or 65 years or over
+Y15,15 years
+Y15T17,From 15 to 17 years
+Y15T19,From 15 to 19 years
+Y15T24,From 15 to 24 years
+Y15T29,From 15 to 29 years
+Y15T44,From 15 to 44 years
+Y15T64,From 15 to 64 years
+Y15T74,From 15 to 74 years
+Y_GE15,15 years or over
+Y_GT15,Over 15 years
+Y_LT16,Less than 16 years
+Y16,16 years
+Y16T24,From 16 to 24 years
+Y16T65,From 16 to 65 years
+Y16T74,From 16 to 74 years
+Y_GE16,16 years or over
+Y17,17 years
+Y_LT18,Less than 18 years
+Y18,18 years
+Y18T20,From 18 to 20 years
+Y18T24,From 18 to 24 years
+Y18T25,From 18 to 25 years
+Y18T65,From 18 to 65 years
+Y_GE18,18 years or over
+Y_GT18,Over 18 years
+Y19,19 years
+Y19T20,From 19 to 20 years
+Y_GE19,19 years or over
+Y_GT19,Over 19 years
+Y_LT20,Less than 20 years
+Y_LE20,20 years or less
+Y_LT20_GE65,Less than 20 years or 65 years or over
+Y20,20 years
+Y20T24,From 20 to 24 years
+Y20T29,From 20 to 29 years
+Y20T64,From 20 to 64 years
+Y20T69,From 20 to 69 years
+Y_GE20,20 years or over
+Y_GT20,Over 20 years
+Y21,21 years
+Y21T22,From 21 to 22 years
+Y21T24,From 21 to 24 years
+Y22,22 years
+Y23,23 years
+Y23T24,From 23 to 24 years
+Y_LE24,24 years or less
+Y24,24 years
+Y_GT24,Over 24 years
+Y_LT25,Less than 25 years
+Y_LE25,25 years or less
+Y25,25 years
+Y25T26,From 25 to 26 years
+Y25T29,From 25 to 29 years
+Y25T34,From 25 to 34 years
+Y25T39,From 25 to 39 years
+Y25T44,From 25 to 44 years
+Y25T54,From 25 to 54 years
+Y25T64,From 25 to 64 years
+Y_GE25,25 years or over
+Y_GT25,Over 25 years
+Y26,26 years
+Y26T40,From 26 to 40 years
+Y27,27 years
+Y27T28,From 27 to 28 years
+Y_LE28,28 years or less
+Y28,28 years
+Y29,29 years
+Y_GT29,Over 29 years
+Y_LT30,Less than 30 years
+Y_LE30,30 years or less
+Y30,30 years
+Y30T34,From 30 to 34 years
+Y30T39,From 30 to 39 years
+Y30T44,From 30 to 44 years
+Y30T49,From 30 to 49 years
+Y_GE30,30 years or over
+Y_GT30,Over 30 years
+Y31,31 years
+Y32,32 years
+Y33,33 years
+Y34,34 years
+Y_LT35,Less than 35 years
+Y_LE35,35 years or less
+Y35,35 years
+Y35T39,From 35 to 39 years
+Y35T44,From 35 to 44 years
+Y35T54,From 35 to 54 years
+Y_GE35,35 years or over
+Y_GT35,Over 35 years
+Y36,36 years
+Y37,37 years
+Y38,38 years
+Y39,39 years
+Y_LT40,Less than 40 years
+Y_LE40,40 years or less
+Y40,40 years
+Y40T44,From 40 to 44 years
+Y40T49,From 40 to 49 years
+Y40T64,From 40 to 64 years
+Y_GE40,40 years or over
+Y_GT40,Over 40 years
+Y41,41 years
+Y41T50,From 41 to 50 years
+Y42,42 years
+Y43,43 years
+Y_LE44,44 years or less
+Y44,44 years
+Y_LT45,Less than 45 years
+Y_LE45,45 years or less
+Y45,45 years
+Y45T49,From 45 to 49 years
+Y45T54,From 45 to 54 years
+Y45T59,From 45 to 59 years
+Y45T64,From 45 to 64 years
+Y_GE45,45 years or over
+Y_GT45,Over 45 years
+Y46,46 years
+Y47,47 years
+Y48,48 years
+Y49,49 years
+Y_GT49,Over 49 years
+Y_LT50,Less than 50 years
+Y_LE50,50 years or less
+Y50,50 years
+Y50T54,From 50 to 54 years
+Y50T59,From 50 to 59 years
+Y50T64,From 50 to 64 years
+Y50T69,From 50 to 69 years
+Y50T74,From 50 to 74 years
+Y_GE50,50 years or over
+Y_GT50,Over 50 years
+Y51,51 years
+Y51T65,From 51 to 65 years
+Y52,52 years
+Y53,53 years
+Y54,54 years
+Y_LT55,Less than 55 years
+Y_LE55,55 years or less
+Y55,55 years
+Y55T59,From 55 to 59 years
+Y55T64,From 55 to 64 years
+Y55T74,From 55 to 74 years
+Y_GE55,55 years or over
+Y_GT55,Over 55 years
+Y56,56 years
+Y57,57 years
+Y58,58 years
+Y59,59 years
+Y_LT60,Less than 60 years
+Y_LE60,60 years or less
+Y60,60 years
+Y60T64,From 60 to 64 years
+Y60T99,From 60 to 99 years
+Y_GE60,60 years or over
+Y_GT60,Over 60 years
+Y61,61 years
+Y61T90,From 61 to 90 years
+Y62,62 years
+Y63,63 years
+Y64,64 years
+Y_GT64,Over 64 years
+Y_LT65,Less than 65 years
+Y_LE65,65 years or less
+Y65,65 years
+Y65T69,From 65 to 69 years
+Y65T74,From 65 to 74 years
+Y65T79,From 65 to 79 years
+Y65T99,From 65 to 99 years
+Y_GE65,65 years or over
+Y_GT65,Over 65 years
+Y66,66 years
+Y66T75,From 66 to 75 years
+Y67,67 years
+Y68,68 years
+Y69,69 years
+Y_LT70,Less than 70 years
+Y_LE70,70 years or less
+Y70,70 years
+Y70T74,From 70 to 74 years
+Y70T99,From 70 to 99 years
+Y_GE70,70 years or over
+Y_GT70,Over 70 years
+Y71,71 years
+Y72,72 years
+Y73,73 years
+Y74,74 years
+Y_LT75,Less than 75 years
+Y_LE75,75 years or less
+Y75,75 years
+Y75T79,From 75 to 79 years
+Y75T84,From 75 to 84 years
+Y75T99,From 75 to 99 years
+Y_GE75,75 years or over
+Y_GT75,Over 75 years
+Y76,76 years
+Y_GE76,76 years or over
+Y77,77 years
+Y78,78 years
+Y79,79 years
+Y_LT80,Less than 80 years
+Y_LE80,80 years or less
+Y80,80 years
+Y80T84,From 80 to 84 years
+Y80T99,From 80 to 99 years
+Y_GE80,80 years or over
+Y_GT80,Over 80 years
+Y81,81 years
+Y82,82 years
+Y83,83 years
+Y84,84 years
+Y_LT85,Less than 85 years
+Y_LE85,85 years or less
+Y85,85 years
+Y85T89,From 85 to 89 years
+Y85T99,From 85 to 99 years
+Y_GE85,85 years or over
+Y_GT85,Over 85 years
+Y86,86 years
+Y87,87 years
+Y88,88 years
+Y89,89 years
+Y_LT90,Less than 90 years
+Y_LE90,90 years or less
+Y90,90 years
+Y90T94,From 90 to 94 years
+Y_GE90,90 years or over
+Y_GT90,Over 90 years
+Y91,91 years
+Y92,92 years
+Y93,93 years
+Y94,94 years
+Y_LT95,Less than 95 years
+Y_LE95,95 years or less
+Y95,95 years
+Y_GE95,95 years or over
+Y_GT95,Over 95 years
+Y96,96 years
+Y97,97 years
+Y98,98 years
+Y99,99 years
+Y100,100 years
+Y101,101 years
+Y102,102 years
+Y103,103 years
+Y104,104 years
+Y105,105 years
+Y106,106 years
+Y107,107 years
+Y108,108 years
+Y109,109 years
+_Z,Not applicable
