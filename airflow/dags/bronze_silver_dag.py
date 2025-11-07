@@ -21,8 +21,8 @@ default_args = {
 
 def execute_bronze_silver_notebook():
     """Executa o notebook de transformação bronze to silver usando papermill"""
-    input_notebook = '/opt/airflow/silver/bronze_silver.ipynb'
-    output_dir = '/opt/airflow/Resultados'
+    input_notebook = '/opt/airflow/transformer/job_etl/bronze_silver.ipynb'
+    output_dir = '/opt/airflow/data_layer/raw/Resultados'
     output_notebook = f'{output_dir}/bronze_silver_executed_{datetime.now().strftime("%Y%m%d_%H%M%S")}.ipynb'
     
     # Garantir que o diretório de output existe com permissões corretas
@@ -66,7 +66,7 @@ with DAG(
 
     task_check_prerequisites = BashOperator(
         task_id="check_prerequisites",
-        bash_command="echo \"Verificando pré-requisitos...\" && test -f /opt/airflow/silver/bronze_silver.ipynb && echo \"Notebook encontrado!\"",
+        bash_command="echo \"Verificando pré-requisitos...\" && test -f /opt/airflow/transformer/job_etl/bronze_silver.ipynb && echo \"Notebook encontrado!\"",
     )
 
     task_execute_notebook = PythonOperator(
