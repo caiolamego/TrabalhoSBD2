@@ -17,26 +17,32 @@ Esta página descreve os principais arquivos e diretórios para você entender r
 ## Airflow
 
 - `airflow/dags/`: DAGs do Airflow que orquestram coleta, transformação e validações.
-  - `bop_dag.py`, `er_dag.py`, `iip_dag.py`, `irfcl_dag.py`: DAGs de coleta dos conjuntos de dados do FMI (BOP, ER, IIP, IRFCL) via notebooks ou scripts na pasta `base_dados/`.
+  - `bop_dag.py`, `er_dag.py`, `iip_dag.py`, `irfcl_dag.py`: DAGs de coleta dos conjuntos de dados do FMI (BOP, ER, IIP, IRFCL) via notebooks ou scripts na pasta `data_layer/raw/`.
   - `silver_bop_dag.py`: Rotinas de transformação/validação específicas de BOP na camada Silver.
-  - `bronze_silver_dag.py`: DAG que executa o notebook `silver/bronze_silver.ipynb` via Papermill para promover dados da camada Bronze para Silver.
+  - `bronze_silver_dag.py`: DAG que executa o notebook `transformer/job_etl/bronze_silver.ipynb` via Papermill para promover dados da camada Bronze para Silver.
+  - `silver_gold_dag.py`: DAG que executa o notebook `transformer/job_etl/silver_gold.ipynb` via Papermill para promover dados da camada Silver para Gold.
 - `airflow/trigger_all_dags.sh`: Script de automação para despausar e disparar todas as DAGs após o Airflow estar saudável.
 - `airflow/config/`, `airflow/plugins/`, `airflow/logs/`: Configurações, extensões e logs do Airflow, respectivamente.
 
-## Coleta e análises (Base de dados)
+## Coleta e análises (Camada Bronze)
 
-- `base_dados/`: Repositório de notebooks e scripts de coleta da API SDMX do FMI e análises exploratórias.
+- `data_layer/raw/`: Repositório de notebooks e scripts de coleta da API SDMX do FMI e análises exploratórias.
   - Subpastas: `BOP/`, `ER/`, `IIP/`, `IRFCL/`, `DEMOGRAPHY/` organizam bases por domínio.
   - `sdmx.ipynb`: Notebook com lógica de acesso/extração SDMX.
   - `script.py`: Utilitários de coleta e processamento inicial.
-  - `Resultados/`: Saídas geradas (por exemplo, `BOP.csv`, `ER.csv`). Também existe uma pasta global `Resultados/` na raiz montada no Airflow.
+  - `Resultados/`: Saídas geradas (por exemplo, `BOP.csv`, `ER.csv`) e notebooks executados via Papermill.
 
-## Transformação (Silver)
+## Transformação (Camadas Silver e Gold)
 
-- `silver/bronze_silver.ipynb`: Notebook principal de transformação da camada Bronze para Silver (normalizações, limpeza, padronizações e junções).
-- `silver/bop_analysis.ipynb`: Análises específicas de BOP na camada Silver.
-- `silver/test_postgres_insert_v2.ipynb`: Exemplo de carga de dados Silver no PostgreSQL.
-- `silver/install_dependencies.sh`: Script auxiliar de setup dentro do container para rodar notebooks quando necessário.
+- `data_layer/silver/`: Dados transformados e normalizados da camada Silver.
+  - `bop_analysis.ipynb`: Análises específicas de BOP na camada Silver.
+  - `test_postgres_insert_v2.ipynb`: Exemplo de carga de dados Silver no PostgreSQL.
+  - `install_dependencies.sh`: Script auxiliar de setup.
+  - `modelagem/`: Diagramas de modelagem de dados (DER/DLD).
+- `data_layer/gold/`: Dados analíticos e agregados (camada em desenvolvimento).
+- `transformer/job_etl/`: Jobs ETL executados pelas DAGs.
+  - `bronze_silver.ipynb`: Notebook principal de transformação da camada Bronze para Silver (normalizações, limpeza, padronizações e junções).
+  - `silver_gold.ipynb`: Notebook de transformação da camada Silver para Gold (agregações e métricas de negócio).
 
 ## Notebooks e resultados
 
@@ -64,7 +70,9 @@ Esta página descreve os principais arquivos e diretórios para você entender r
 ## Itens mais importantes para entender o projeto
 
 1. DAGs em `airflow/dags/` — componentes que automatizam a orquestração, incluindo a execução de notebooks via Papermill.
-2. Notebook `silver/bronze_silver.ipynb` — transformação Bronze → Silver.
+2. Notebooks de transformação em `transformer/job_etl/`:
+   - `bronze_silver.ipynb` — transformação Bronze → Silver.
+   - `silver_gold.ipynb` — transformação Silver → Gold.
 3. `airflow/trigger_all_dags.sh` — automatiza despausar e disparar DAGs quando o ambiente sobe.
-4. `base_dados/` — notebooks de coleta SDMX e análises pós-coleta.
+4. `data_layer/raw/` — notebooks de coleta SDMX e análises pós-coleta.
 5. `docs/dictionaries/` — dicionários de dados por base, úteis para interpretação e modelagem.

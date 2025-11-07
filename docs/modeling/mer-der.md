@@ -8,11 +8,11 @@ Este documento apresenta a estrutura lógica do modelo de dados, ilustrando as e
 
 Primeiramente desenvolveu-se o DER para representar os dados da maneira como foram extraídos:
 
-<img src="../../assets/der.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
+![Diagrama Entidade-Relacionamento](../assets/der.png)
 
 Afim de esclarecer a futura estrutura que será utilizada na camada Gold, foi desenvolvido, também o DER da futura estrutura do Data Lakehouse:
 
-<img src="../../assets/der_schema.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
+![Diagrama Entidade-Relacionamento - Schema Gold](../assets/der_schema.png)
 
 ## 2. Diagrama Lógico de Dados (DLD)
 
@@ -22,11 +22,11 @@ Segue, respectivamente, o DLD da estrutura dos dados e da estrutura que será us
 
 Dados:
 
-<img src="../../assets/dld.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
+![Diagrama Lógico de Dados](../assets/dld.png)
 
 O schema previsto concentra uma tabela Fato principal, relacionada diretamente às dimensões País, Frequência e Indicador.
 
-<img src="../../assets/dld_schema.png" alt="Diagrama Entidade-Relacionamento" style="max-width: 100%; height: auto;">
+![Diagrama Lógico - Schema Gold](../assets/dld_schema.png)
 
 
 
