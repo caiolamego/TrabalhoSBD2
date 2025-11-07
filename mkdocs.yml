@@ -1,5 +1,5 @@
 site_name: Documentação - Integração de Dados Econômicos
-site_dir: docs/site
+site_dir: site
 
 nav:
   - Início: index.md
