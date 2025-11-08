@@ -12,7 +12,7 @@ CREATE TABLE DW.Dim_Tempo (
     Periodo_Completo VARCHAR(10) NOT NULL UNIQUE,
     Ano INT NOT NULL,
     Trimestre VARCHAR(2),
-    Mes INT
+    -- Mes INT
 );
 
 CREATE TABLE DW.Dim_Indicador (
