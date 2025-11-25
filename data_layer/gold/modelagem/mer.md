@@ -9,16 +9,16 @@
 
 #### DESCRIÇÃO DAS ENTIDADES (ATRIBUTOS):
 
-* **PAIS** (`SRK_Pais`, `codigoPais`, `nomePais`)
-    * *Observação: `codigoPais` é o código de negócio (ex: 'USA').*
+* **DIM_PAI** (`srk_pai`, `cod_pai`, `nom_pai`)
+    * *Observação: `cod_pai` é o código de negócio (ex: 'USA').*
 
-* **INDICADOR** (`SRK_Indicador`, `codigoIndicador`, `categoriaIndicador`, `unidadeMedida`)
-    * *`codigoIndicador` é o código de negócio (ex: 'CAB').*
+* **DIM_IND** (`srk_ind`, `cod_ind`, `nom_ind`, `nom_fnt`, `des_cat`)
+    * *`cod_ind` é o código de negócio (ex: 'CAB').*
 
-* **TEMPO** (`SRK_Tempo`, `dataCompleta`, `ano`, `mes`, `trimestre`)
+* **DIM_TMP** (`srk_tmp`, `cod_per`, `num_ano`, `cod_tri`)
 
-* **FATO** (`SRK_Tempo`, `SRK_Pais`, `SRK_Indicador`, `valor`)
-    * *Observação: Esta é a entidade Fato. Seus identificadores são as chaves das entidades dimensionais às quais se conecta, e seu atributo principal é a métrica `valor`.*
+* **FAT_OBS_ECO** (`srk_pai`, `srk_ind`, `srk_tmp`, `vlr_obs`)
+    * *Observação: Esta é a entidade Fato. Seus identificadores são as chaves das entidades dimensionais às quais se conecta, e seu atributo principal é a métrica `vrl_obs`.*
 
 #### DESCRIÇÃO DOS RELACIONAMENTOS:
 
