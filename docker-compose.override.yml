@@ -78,8 +78,23 @@ services:
     profiles:
       - jupyter
 
+  # ==============================================
+  # SUPERSET - Development Overrides
+  # ==============================================
+  superset:
+    environment:
+      # Debug mode para desenvolvimento
+      SUPERSET_ENV: development
+      SUPERSET_LOAD_EXAMPLES: 'yes'
+      FLASK_ENV: development
+    volumes:
+      # Volume para persistência de dashboards em desenvolvimento
+      - superset-dev-data:/app/superset_home
+
 volumes:
   postgres-dev-data:
+    driver: local
+  superset-dev-data:
     driver: local
 
 # ==============================================
@@ -88,16 +103,33 @@ volumes:
 # 
 # Para usar este arquivo de override:
 # 
-# 1. Desenvolvimento normal:
+# 1. Desenvolvimento normal (Airflow completo):
 #    docker-compose up -d
 # 
-# 2. Com Jupyter Lab:
+# 2. Apenas Superset (leve):
+#    docker-compose --profile superset up -d
+#    Acesso: http://localhost:8088
+#    Usuário: admin | Senha: admin
+# 
+# 3. Com Jupyter Lab:
 #    docker-compose --profile jupyter up -d
 #    Acesse: http://localhost:8888 (token: desenvolvimento)
 # 
-# 3. Apenas Jupyter:
-#    docker-compose up jupyter
+# 4. Superset + Jupyter:
+#    docker-compose --profile superset --profile jupyter up -d
 # 
-# 4. Debug completo:
+# 5. Debug completo:
 #    docker-compose logs -f
+#
+# 6. Parar apenas Superset:
+#    docker-compose --profile superset down
+#
+# 7. Conectar Superset a bancos externos:
+#    PostgreSQL do Airflow (se estiver rodando):
+#    - URI: postgresql://airflow:airflow@postgres:5432/airflow
+#    
+#    PostgreSQL do Superset (standalone):
+#    - Host: postgres-superset (interno) ou localhost:5434 (externo)
+#    - Database: superset
+#    - Username: superset | Password: superset
 #

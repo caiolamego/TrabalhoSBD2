@@ -100,6 +100,8 @@ services:
     restart: always
     networks:
       - airflow-network
+    profiles:
+      - airflow
 
   # ==============================================
   # AIRFLOW WEBSERVER
@@ -122,6 +124,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    profiles:
+      - airflow
 
   # ==============================================
   # ONE-SHOT: TRIGGER ALL DAGS (executa uma vez após webserver estar healthy)
@@ -142,6 +146,8 @@ services:
       - airflow-network
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/airflow/trigger_all_dags.sh:/opt/airflow/trigger_all_dags.sh:ro
+    profiles:
+      - airflow
 
   # ==============================================
   # AIRFLOW SCHEDULER
@@ -162,6 +168,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    profiles:
+      - airflow
 
   # ==============================================
   # AIRFLOW INIT
@@ -204,6 +212,8 @@ services:
       - ${AIRFLOW_PROJ_DIR:-.}/airflow:/sources
       - ${AIRFLOW_PROJ_DIR:-.}/data_layer:/opt/airflow/data_layer
       - ${AIRFLOW_PROJ_DIR:-.}/notebooks:/opt/airflow/notebooks
+    profiles:
+      - airflow
 
   # ==============================================
   # AIRFLOW CLI (DEBUG PROFILE)
@@ -222,6 +232,74 @@ services:
     networks:
       - airflow-network
 
+  # ==============================================
+  # POSTGRES FOR SUPERSET (Standalone)
+  # ==============================================
+  postgres-superset:
+    image: postgres:15-alpine
+    container_name: postgres-superset
+    environment:
+      POSTGRES_DB: superset
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: superset
+    volumes:
+      - postgres-superset-volume:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U superset"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: always
+    networks:
+      - airflow-network
+    profiles:
+      - superset
+
+  # ==============================================
+  # APACHE SUPERSET (Standalone)
+  # ==============================================
+  superset:
+    image: apache/superset:latest
+    container_name: superset
+    environment:
+      - SUPERSET_SECRET_KEY=your-superset-secret-key-change-in-production
+      - SUPERSET_LOAD_EXAMPLES=yes
+      - DATABASE_DIALECT=postgresql
+      - DATABASE_USER=superset
+      - DATABASE_PASSWORD=superset
+      - DATABASE_HOST=postgres-superset
+      - DATABASE_PORT=5432
+      - DATABASE_DB=superset
+      - SQLALCHEMY_DATABASE_URI=postgresql://superset:superset@postgres-superset:5432/superset
+    ports:
+      - "8088:8088"
+    volumes:
+      - superset-data:/app/superset_home
+    networks:
+      - airflow-network
+    restart: always
+    depends_on:
+      postgres-superset:
+        condition: service_healthy
+    command: >
+      bash -c "
+      superset db upgrade &&
+      (superset fab create-admin --username admin --firstname Admin --lastname User --email admin@superset.com --password admin 2>/dev/null || echo 'Admin user already exists') &&
+      superset init &&
+      superset run -h 0.0.0.0 -p 8088 --with-threads --reload --debugger
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    profiles:
+      - superset
+
 # ==============================================
 # VOLUMES
 # ==============================================
@@ -229,6 +307,10 @@ volumes:
   postgres-db-volume:
     driver: local
   airflow-logs:
+    driver: local
+  superset-data:
+    driver: local
+  postgres-superset-volume:
     driver: local
 
 # ==============================================
